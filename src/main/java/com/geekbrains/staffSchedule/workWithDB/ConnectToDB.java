@@ -1,9 +1,6 @@
 package com.geekbrains.staffSchedule.workWithDB;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ConnectToDB {
 
@@ -15,7 +12,7 @@ public class ConnectToDB {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:employeeDB.db");
             stmt = connection.createStatement();
-            System.out.println("Соединение установлено");
+            System.out.println("Соединение c базой данных установлено");
         } catch (ClassNotFoundException | SQLException e) {
             new RuntimeException("Подключение к базе данных не установлено");
         }

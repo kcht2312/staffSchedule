@@ -8,8 +8,6 @@ import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.stmt;
 
 public class EmployeeCRUD {
 
-    //private static PreparedStatement =
-
     public static void printAll (){
         try {
             ResultSet rs = stmt.executeQuery("SELECT emp.id,name,position,salary, age,phone_number,address FROM \n" +
