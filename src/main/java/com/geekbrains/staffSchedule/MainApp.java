@@ -52,8 +52,14 @@ public class MainApp {
                 case ("printAll"):
                     EmployeeCRUD.printAll();
                     break;
-                case("getAverageSal"):
-                    EmployeeCRUD.setGetAvegrageSalary();
+                case("getCompAverageSal"):
+                    EmployeeCRUD.getCompanyAvegrageSalary();
+                    break;
+                case("getPosAverageSal"):
+                    EmployeeCRUD.getPositionAverageSalary();
+                    break;
+                case("searchByPhone"):
+                    EmployeeCRUD.getNameByNumber(values[1]);
                     break;
                 case("addEmp"):
                     EmployeeCRUD.addEmployee(values[1],values[2],Integer.parseInt(values[3]),Float.parseFloat(values[4]));

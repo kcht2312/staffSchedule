@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import com.geekbrains.staffSchedule.entity.AdditionalInformation;
 import com.geekbrains.staffSchedule.entity.Employee;
 
@@ -13,15 +12,18 @@ import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.stmt;
 public class EmployeeCRUD {
 
     static PreparedStatement addEmp;
+    static PreparedStatement searchByPhone;
 
     static {
         try {
             addEmp = ConnectToDB.connection.prepareStatement("INSERT INTO emp (name, position, age, salary) VALUES (?,?,?,?)");
+            searchByPhone = ConnectToDB.connection.prepareStatement("SELECT name FROM emp WHERE id = (SELECT id FROM add_Inf WHERE phone_number = ?)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    //метод для импорта работников из базы в list
     public static ArrayList<Employee> getAllEmployee() {
         ArrayList<Employee> internalArrayOfEmployee = new ArrayList<>();
         try {
@@ -30,7 +32,6 @@ public class EmployeeCRUD {
             while (rs.next()) {
                 Employee employee = new Employee();
                 AdditionalInformation additionalInformation = new AdditionalInformation();
-
                 employee.setID(rs.getInt("id"));
                 employee.setName(rs.getString("name"));
                 employee.setPosition(rs.getString("position"));
@@ -45,8 +46,6 @@ public class EmployeeCRUD {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         return internalArrayOfEmployee;
     }
 
@@ -59,6 +58,18 @@ public class EmployeeCRUD {
             addEmp.setFloat(4, salary);
             addEmp.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getNameByNumber(String phoneNumber){
+        try{
+            searchByPhone.setString(1, phoneNumber);
+            ResultSet rs = searchByPhone.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString("name"));
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -84,7 +95,7 @@ public class EmployeeCRUD {
         }
     }
 
-    public static void setGetAvegrageSalary() {
+    public static void getCompanyAvegrageSalary() {
         try {
             ResultSet rs = stmt.executeQuery("SELECT avg(salary)AS average_salary FROM emp;");
 
@@ -93,4 +104,17 @@ public class EmployeeCRUD {
             e.printStackTrace();
         }
     }
+
+    public static void getPositionAverageSalary() {
+        try {
+            ResultSet rs = stmt.executeQuery("SELECT position, avg(salary)AS average_salary FROM emp GROUP BY position;");
+            while (rs.next()) {
+                System.out.println(rs.getString("position") + " " + rs.getInt("average_salary"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
