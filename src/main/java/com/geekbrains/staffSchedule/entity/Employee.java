@@ -1,7 +1,7 @@
 package com.geekbrains.staffSchedule.entity;
 
 public class Employee {
-    int ID;
+    int id;
     String name;
     String position;
     int age;
@@ -11,12 +11,27 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String name, int age, String position, float salary, AdditionalInformation addInform) {
+    public Employee(String name, String position, int age, float salary) {
+        this.name = name;
+        this.position = position;
+        this.age = age;
+        this.salary = salary;
+    }
+
+    public Employee(String name, String position, int age, float salary, AdditionalInformation addInform) {
         this.name = name;
         this.position = position;
         this.age = age;
         this.salary = salary;
         this.addInform = addInform;
+    }
+
+    public int getID(){
+        return id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -62,7 +77,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", name='" + name + '\'' +
                 ", position='" + position + '\'' +
                 ", age=" + age +

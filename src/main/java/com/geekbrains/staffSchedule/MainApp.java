@@ -1,21 +1,18 @@
 package com.geekbrains.staffSchedule;
 
 
+import com.geekbrains.staffSchedule.entity.Employee;
 import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainApp {
 
-    private static Scanner scanner;
-    protected static Connection connection;
-    protected static Statement stmt;
+    private static ArrayList<Employee> arrayOfEmployee = new ArrayList<>();
 
+    private static Scanner scanner;
 
     public static void main(String[] args) {
 
@@ -46,8 +43,20 @@ public class MainApp {
                             "        exit\n"
                     );
                     break;
+                case("loadFromDB"):
+                    arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
+                    break;
+                case("showAll"):
+                    System.out.println(arrayOfEmployee);
+                    break;
                 case ("printAll"):
                     EmployeeCRUD.printAll();
+                    break;
+                case("getAverageSal"):
+                    EmployeeCRUD.setGetAvegrageSalary();
+                    break;
+                case("addEmp"):
+                    EmployeeCRUD.addEmployee(values[1],values[2],Integer.parseInt(values[3]),Float.parseFloat(values[4]));
                     break;
                 case ("exit"):
                     ConnectToDB.disconnect();

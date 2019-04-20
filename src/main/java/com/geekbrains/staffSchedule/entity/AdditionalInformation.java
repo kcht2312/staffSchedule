@@ -1,7 +1,7 @@
 package com.geekbrains.staffSchedule.entity;
 
 public class AdditionalInformation {
-    int ID;
+    int id;
     String phoneNumber;
     String address;
 
@@ -11,6 +11,14 @@ public class AdditionalInformation {
     public AdditionalInformation(String phoneNumber, String address) {
         this.phoneNumber = phoneNumber;
         this.address = address;
+    }
+
+    public int getID(){
+        return id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public String getPhoneNumber() {
@@ -32,7 +40,7 @@ public class AdditionalInformation {
     @Override
     public String toString() {
         return "AdditionalInformation{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 '}';
