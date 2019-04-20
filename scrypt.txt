@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS emp (
+	id       INTEGER PRIMARY KEY,
+	name     TEXT    NOT NULL,
+   	position STRING,
+    	salary   REAL,
+    	age      INT
+);
+
+CREATE TABLE IF NOT EXISTS add_Inf(
+	id           INTEGER REFERENCES emp (id),
+    	phone_number STRING,
+    	address      STRING
+);
+
+INSERT INTO emp  VALUES(1,'Ivan Ivanov','director',100000,50);
+INSERT INTO emp  VALUES(2,'Petr Petrov','manager',70000,45);
+INSERT INTO emp  VALUES(3,'Sergei Sergeev','salesman',35000,30);
+INSERT INTO emp  VALUES(4,'Vladimir Vladimirov','salesman',35000,35);
+INSERT INTO emp  VALUES(5,'Kiril Kirilov','cleaner',25000,50);
+
+INSERT INTO add_Inf VALUES(1,'8-800-555-35-35','Moscow, st.Pushkina,1');
+INSERT INTO add_Inf VALUES(2,'8-800-555-35-36','Moscow, st.Pushkina,2');
+INSERT INTO add_Inf VALUES(3,'8-800-555-35-37','Moscow, st.Pushkina,3');
+INSERT INTO add_Inf VALUES(4,'8-800-555-35-38','Moscow, st.Pushkina,4');
+INSERT INTO add_Inf VALUES(5,'8-800-555-35-39','Moscow, st.Pushkina,5');
