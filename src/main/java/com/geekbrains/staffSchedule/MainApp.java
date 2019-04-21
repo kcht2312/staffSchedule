@@ -1,7 +1,10 @@
 package com.geekbrains.staffSchedule;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.geekbrains.staffSchedule.entity.Employee;
+import com.geekbrains.staffSchedule.exception.InvalidArgumentSetException;
+import com.geekbrains.staffSchedule.fileIO.ExportToJSON;
 import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
 
@@ -43,6 +46,17 @@ public class MainApp {
                             "        exit\n"
                     );
                     break;
+                case("importTo"):
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        ExportToJSON.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
                 case("loadFromDB"):
                     arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
                     break;
@@ -59,10 +73,24 @@ public class MainApp {
                     EmployeeCRUD.getPositionAverageSalary();
                     break;
                 case("searchByPhone"):
-                    EmployeeCRUD.getNameByNumber(values[1]);
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        EmployeeCRUD.getNameByNumber(values[1]);
+                    } catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
                     break;
                 case("addEmp"):
-                    EmployeeCRUD.addEmployee(values[1],values[2],Integer.parseInt(values[3]),Float.parseFloat(values[4]));
+                    try {
+                        if (values.length < 5 || values.length > 5) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
                     break;
                 case ("exit"):
                     ConnectToDB.disconnect();

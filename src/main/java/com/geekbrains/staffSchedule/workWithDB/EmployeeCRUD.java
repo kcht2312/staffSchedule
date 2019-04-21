@@ -11,13 +11,16 @@ import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.stmt;
 
 public class EmployeeCRUD {
 
+    //создание и инициализация статических PreparedStatement
     static PreparedStatement addEmp;
     static PreparedStatement searchByPhone;
 
     static {
         try {
             addEmp = ConnectToDB.connection.prepareStatement("INSERT INTO emp (name, position, age, salary) VALUES (?,?,?,?)");
-            searchByPhone = ConnectToDB.connection.prepareStatement("SELECT name FROM emp WHERE id = (SELECT id FROM add_Inf WHERE phone_number = ?)");
+            searchByPhone = ConnectToDB.connection.prepareStatement("SELECT name, phone_number \n" +
+                                                                        "FROM emp, add_inf WHERE emp.id = add_inf.id AND \n" +
+                                                                        "emp.id IN (SELECT id FROM add_Inf WHERE phone_number LIKE ? )");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,10 +67,11 @@ public class EmployeeCRUD {
 
     public static void getNameByNumber(String phoneNumber){
         try{
-            searchByPhone.setString(1, phoneNumber);
+            searchByPhone.setString(1, "%" + phoneNumber + "%");
             ResultSet rs = searchByPhone.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getString("name"));
+                System.out.println(rs.getString("name") + " " +
+                        rs.getString("phone_number"));
             }
         }catch (SQLException e) {
             e.printStackTrace();
@@ -115,6 +119,5 @@ public class EmployeeCRUD {
             e.printStackTrace();
         }
     }
-
 
 }
