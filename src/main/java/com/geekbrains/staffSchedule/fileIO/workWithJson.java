@@ -8,15 +8,15 @@ import com.geekbrains.staffSchedule.entity.Employee;
 import java.io.*;
 import java.util.ArrayList;
 
-public class ExportToJSON {
+public class workWithJson {
     public static void exportArrayOfEmployeeToFile(ArrayList<Employee> arrayList, String fileName) throws JsonProcessingException {
         try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName, true), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName + ".json", true), "UTF-8"));
             ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             for (Employee employee : arrayList) {
-                mapper.enable(SerializationFeature.INDENT_OUTPUT);
-                String jsonStudent = mapper.writeValueAsString(employee);
-                bw.write(jsonStudent);
+                String jsonEmployee = mapper.writeValueAsString(employee);
+                bw.write(jsonEmployee);
                 bw.newLine();
             }
             bw.flush();

@@ -1,6 +1,6 @@
 package com.geekbrains.staffSchedule.entity;
 
-public class Employee {
+public class Employee  {
     int id;
     String name;
     String position;

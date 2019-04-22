@@ -4,10 +4,12 @@ package com.geekbrains.staffSchedule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.geekbrains.staffSchedule.entity.Employee;
 import com.geekbrains.staffSchedule.exception.InvalidArgumentSetException;
-import com.geekbrains.staffSchedule.fileIO.ExportToJSON;
+import com.geekbrains.staffSchedule.fileIO.workWithJson;
+import com.geekbrains.staffSchedule.fileIO.workWithXml;
 import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -29,6 +31,7 @@ public class MainApp {
 
         //Старт консольного приложения
         while (true) {
+            System.out.println("Список команд: /help");
             System.out.println("Введите команду");
 
             //Ввод команды
@@ -40,31 +43,76 @@ public class MainApp {
             switch (values[0]) {
                 case ("help"):
                     System.out.println("Доступные операции(команду и каждый атрибут писать через пробел)\n" +
-                            "        printAll;\n" +
-                            "        searchByCost(min и max значения)\n" +
-                            "        clearTable\n" +
-                            "        exit\n"
+                            "        /printAll - отобразить все записи из БД \n" +
+                            "        /loadFromDB - загрузить записи из БД в list \n" +
+                            "        /showAll - отобразить все объекты в list \n" +
+                            "        /clearList - удалить все элементы из list\n" +
+                            "        /addEmp - добавить работника в БД\n" +
+                            "        /expJson - экспортировать записи из БД в файл формата .json \n" +
+                            "        /expXml - экспортировать записи из БД в файл формата .xml \n" +
+                            "        /impXml - импортировать записи из файла формата .xml в БД \n" +
+                            "        /getCompAverageSal - отобразить среднюю зарплату в компании \n" +
+                            "        /getPosAverageSal- отобразить среднюю зарплату по должностям \n" +
+                            "        /searchByPhone - найти сотрудника по телефону \n" +
+                            "        /exit - закрытие программы\n"
                     );
                     break;
-                case("importTo"):
-                    try {
-                        if (values.length < 2 || values.length > 2) {
-                            throw new InvalidArgumentSetException();
-                        }
-                        ExportToJSON.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }catch (InvalidArgumentSetException e){
-                        e.printStackTrace();
-                    }
                 case("loadFromDB"):
                     arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
                     break;
                 case("showAll"):
                     System.out.println(arrayOfEmployee);
                     break;
+                case("clearList"):
+                    System.out.println(arrayOfEmployee);
+                    break;
                 case ("printAll"):
                     EmployeeCRUD.printAll();
+                    break;
+                case("addEmp"):
+                    try {
+                        if (values.length < 5 || values.length > 5) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case("expJson"):
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        workWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case("expXml"):
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        workWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
+                case("impXml"):
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        arrayOfEmployee.addAll(workWithXml.importArrayOfEmployeeFromFile(values[1]));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }
                     break;
                 case("getCompAverageSal"):
                     EmployeeCRUD.getCompanyAvegrageSalary();
@@ -82,16 +130,6 @@ public class MainApp {
                         e.printStackTrace();
                     }
                     break;
-                case("addEmp"):
-                    try {
-                        if (values.length < 5 || values.length > 5) {
-                            throw new InvalidArgumentSetException();
-                        }
-                        EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
-                    }catch (InvalidArgumentSetException e){
-                        e.printStackTrace();
-                    }
-                    break;
                 case ("exit"):
                     ConnectToDB.disconnect();
                     System.exit(0);
@@ -101,6 +139,10 @@ public class MainApp {
             }
         }
 
+    }
+
+    public static void clearListEmployee() {
+        arrayOfEmployee.clear();
     }
 
 }
