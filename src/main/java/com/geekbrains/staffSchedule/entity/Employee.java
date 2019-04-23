@@ -1,12 +1,17 @@
 package com.geekbrains.staffSchedule.entity;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 public class Employee  {
-    int id;
-    String name;
-    String position;
-    int age;
-    float salary;
-    AdditionalInformation addInform;
+
+
+    private int id;
+    private String name;
+    private String position;
+    private int age;
+    private float salary;
+    private AdditionalInformation addInform;
 
     public Employee() {
     }

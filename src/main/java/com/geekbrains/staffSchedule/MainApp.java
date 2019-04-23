@@ -4,11 +4,10 @@ package com.geekbrains.staffSchedule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.geekbrains.staffSchedule.entity.Employee;
 import com.geekbrains.staffSchedule.exception.InvalidArgumentSetException;
-import com.geekbrains.staffSchedule.fileIO.workWithJson;
-import com.geekbrains.staffSchedule.fileIO.workWithXml;
+import com.geekbrains.staffSchedule.fileIO.WorkWithJson;
+import com.geekbrains.staffSchedule.fileIO.WorkWithXml;
 import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -64,7 +63,7 @@ public class MainApp {
                     System.out.println(arrayOfEmployee);
                     break;
                 case("clearList"):
-                    System.out.println(arrayOfEmployee);
+                    arrayOfEmployee.clear();
                     break;
                 case ("printAll"):
                     EmployeeCRUD.printAll();
@@ -84,10 +83,12 @@ public class MainApp {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
-                        workWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                        WorkWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }catch (InvalidArgumentSetException e){
+                        e.printStackTrace();
+                    }catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -96,18 +97,19 @@ public class MainApp {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
-                        workWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                        WorkWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
                     }
+                    break;
                 case("impXml"):
                     try {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
-                        arrayOfEmployee.addAll(workWithXml.importArrayOfEmployeeFromFile(values[1]));
+                        arrayOfEmployee.addAll(WorkWithXml.importArrayOfEmployeeFromFile(values[1]));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }catch (InvalidArgumentSetException e){
@@ -139,10 +141,6 @@ public class MainApp {
             }
         }
 
-    }
-
-    public static void clearListEmployee() {
-        arrayOfEmployee.clear();
     }
 
 }

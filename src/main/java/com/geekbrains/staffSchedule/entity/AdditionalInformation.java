@@ -1,9 +1,14 @@
 package com.geekbrains.staffSchedule.entity;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 public class AdditionalInformation {
-    int id;
-    String phoneNumber;
-    String address;
+    @JacksonXmlProperty(localName = "id")
+    private int id;
+    @JacksonXmlProperty(localName = "phoneNumber")
+    private String phoneNumber;
+    @JacksonXmlProperty(localName = "address")
+    private String address;
 
     public AdditionalInformation() {
     }
