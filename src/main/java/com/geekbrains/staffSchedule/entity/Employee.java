@@ -1,8 +1,5 @@
 package com.geekbrains.staffSchedule.entity;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 public class Employee  {
 
 

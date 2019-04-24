@@ -6,11 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import com.geekbrains.staffSchedule.entity.AdditionalInformation;
 import com.geekbrains.staffSchedule.entity.Employee;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.stmt;
 
 public class EmployeeCRUD {
 
+    private static final Logger logger = LogManager.getLogger(EmployeeCRUD.class.getName());
     //создание и инициализация статических PreparedStatement
     static PreparedStatement addEmp;
     static PreparedStatement searchByPhone;
@@ -23,6 +26,7 @@ public class EmployeeCRUD {
                                                                         "emp.id IN (SELECT id FROM add_Inf WHERE phone_number LIKE ? )");
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -48,6 +52,7 @@ public class EmployeeCRUD {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
         return internalArrayOfEmployee;
     }
@@ -62,6 +67,7 @@ public class EmployeeCRUD {
             addEmp.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -75,6 +81,7 @@ public class EmployeeCRUD {
             }
         }catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -96,6 +103,7 @@ public class EmployeeCRUD {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -106,6 +114,7 @@ public class EmployeeCRUD {
             System.out.println(rs.getInt("average_salary"));
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -117,6 +126,7 @@ public class EmployeeCRUD {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e);
         }
     }
 

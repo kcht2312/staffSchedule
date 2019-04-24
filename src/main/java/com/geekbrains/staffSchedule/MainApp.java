@@ -8,11 +8,16 @@ import com.geekbrains.staffSchedule.fileIO.WorkWithJson;
 import com.geekbrains.staffSchedule.fileIO.WorkWithXml;
 import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainApp {
+
+    private static final Logger logger = LogManager.getLogger(MainApp.class.getName());
 
     private static ArrayList<Employee> arrayOfEmployee = new ArrayList<>();
 
@@ -26,6 +31,7 @@ public class MainApp {
             ConnectToDB.connect();
         } catch (RuntimeException e) {
             e.printStackTrace();
+            logger.fatal("e");
         }
 
         //Старт консольного приложения
@@ -47,9 +53,9 @@ public class MainApp {
                             "        /showAll - отобразить все объекты в list \n" +
                             "        /clearList - удалить все элементы из list\n" +
                             "        /addEmp - добавить работника в БД\n" +
-                            "        /expJson - экспортировать записи из БД в файл формата .json \n" +
-                            "        /expXml - экспортировать записи из БД в файл формата .xml \n" +
-                            "        /impXml - импортировать записи из файла формата .xml в БД \n" +
+                            "        /expJson - экспортировать записи  в файл формата .json \n" +
+                            "        /expXml - экспортировать записи  в файл формата .xml \n" +
+                            "        /impXml - импортировать записи из файла формата .xml  \n" +
                             "        /getCompAverageSal - отобразить среднюю зарплату в компании \n" +
                             "        /getPosAverageSal- отобразить среднюю зарплату по должностям \n" +
                             "        /searchByPhone - найти сотрудника по телефону \n" +
@@ -58,12 +64,14 @@ public class MainApp {
                     break;
                 case("loadFromDB"):
                     arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
+                    logger.info("Из бд загружен список работников");
                     break;
                 case("showAll"):
                     System.out.println(arrayOfEmployee);
                     break;
                 case("clearList"):
                     arrayOfEmployee.clear();
+                    logger.info("List работников очищен");
                     break;
                 case ("printAll"):
                     EmployeeCRUD.printAll();
@@ -76,6 +84,7 @@ public class MainApp {
                         EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
+                        logger.error(e);
                     }
                     break;
                 case("expJson"):
@@ -88,8 +97,10 @@ public class MainApp {
                         e.printStackTrace();
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
+                        logger.error(e);
                     }catch (IOException e) {
                         e.printStackTrace();
+                        logger.error(e);
                     }
                     break;
                 case("expXml"):
@@ -100,8 +111,10 @@ public class MainApp {
                         WorkWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        logger.error(e);
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
+                        logger.error(e);
                     }
                     break;
                 case("impXml"):
@@ -112,8 +125,10 @@ public class MainApp {
                         arrayOfEmployee.addAll(WorkWithXml.importArrayOfEmployeeFromFile(values[1]));
                     } catch (IOException e) {
                         e.printStackTrace();
+                        logger.error(e);
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
+                        logger.error(e);
                     }
                     break;
                 case("getCompAverageSal"):
