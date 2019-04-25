@@ -4,11 +4,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.geekbrains.staffSchedule.entity.AdditionalInformation;
 import com.geekbrains.staffSchedule.entity.Employee;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.connection;
 import static com.geekbrains.staffSchedule.workWithDB.ConnectToDB.stmt;
 
 public class EmployeeCRUD {
@@ -20,10 +23,10 @@ public class EmployeeCRUD {
 
     static {
         try {
-            addEmp = ConnectToDB.connection.prepareStatement("INSERT INTO emp (name, position, age, salary) VALUES (?,?,?,?)");
-            searchByPhone = ConnectToDB.connection.prepareStatement("SELECT name, phone_number \n" +
-                                                                        "FROM emp, add_inf WHERE emp.id = add_inf.id AND \n" +
-                                                                        "emp.id IN (SELECT id FROM add_Inf WHERE phone_number LIKE ? )");
+            addEmp = connection.prepareStatement("INSERT INTO emp (name, position, age, salary) VALUES (?,?,?,?)");
+            searchByPhone = connection.prepareStatement("SELECT emp.id, name,position, phone_number,salary, age,address \n" +
+                    "FROM emp, add_inf WHERE emp.id = add_inf.id AND \n" +
+                    "emp.id IN (SELECT id FROM add_Inf WHERE phone_number LIKE ? )");
         } catch (SQLException e) {
             e.printStackTrace();
             logger.error(e);
@@ -37,18 +40,18 @@ public class EmployeeCRUD {
             ResultSet rs = stmt.executeQuery("SELECT emp.id,name,position,salary, age,phone_number,address FROM \n" +
                     "emp,add_inf WHERE emp.id = add_inf.id;");
             while (rs.next()) {
-                Employee employee = new Employee();
-                AdditionalInformation additionalInformation = new AdditionalInformation();
-                employee.setID(rs.getInt("id"));
-                employee.setName(rs.getString("name"));
-                employee.setPosition(rs.getString("position"));
-                employee.setSalary(rs.getFloat("salary"));
-                employee.setAge(rs.getInt("age"));
-                additionalInformation.setID(rs.getInt("id"));
-                additionalInformation.setPhoneNumber(rs.getString("phone_number"));
-                additionalInformation.setAddress(rs.getString("address"));
-                employee.setAddInform(additionalInformation);
-                internalArrayOfEmployee.add(employee);
+            Employee employee = new Employee();
+            AdditionalInformation additionalInformation = new AdditionalInformation();
+            employee.setID(rs.getInt("id"));
+            employee.setName(rs.getString("name"));
+            employee.setPosition(rs.getString("position"));
+            employee.setSalary(rs.getFloat("salary"));
+            employee.setAge(rs.getInt("age"));
+            additionalInformation.setID(rs.getInt("id"));
+            additionalInformation.setPhoneNumber(rs.getString("phone_number"));
+            additionalInformation.setAddress(rs.getString("address"));
+            employee.setAddInform(additionalInformation);
+            internalArrayOfEmployee.add(employee);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,63 +74,57 @@ public class EmployeeCRUD {
         }
     }
 
-    public static void getNameByNumber(String phoneNumber){
+    public static ArrayList<Employee> getNameByNumber(String phoneNumber){
+        ArrayList<Employee> arrayOfEmployeeByNumber = new ArrayList<>();
         try{
             searchByPhone.setString(1, "%" + phoneNumber + "%");
             ResultSet rs = searchByPhone.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getString("name") + " " +
-                        rs.getString("phone_number"));
-            }
+                Employee employee = new Employee();
+                AdditionalInformation additionalInformation = new AdditionalInformation();
+                employee.setID(rs.getInt("id"));
+                employee.setName(rs.getString("name"));
+                employee.setPosition(rs.getString("position"));
+                employee.setSalary(rs.getFloat("salary"));
+                employee.setAge(rs.getInt("age"));
+                additionalInformation.setID(rs.getInt("id"));
+                additionalInformation.setPhoneNumber(rs.getString("phone_number"));
+                additionalInformation.setAddress(rs.getString("address"));
+                employee.setAddInform(additionalInformation);
+                arrayOfEmployeeByNumber.add(employee);
+        }
         }catch (SQLException e) {
             e.printStackTrace();
             logger.error(e);
         }
+        return arrayOfEmployeeByNumber;
     }
 
-
-    public static void printAll() {
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT emp.id,name,position,salary, age,phone_number,address FROM \n" +
-                    "emp,add_inf WHERE emp.id = add_inf.id;");
-            while (rs.next()) {
-                System.out.println(
-                        rs.getInt("id") + " " +
-                                rs.getString("name") + " " +
-                                rs.getString("position") + " " +
-                                rs.getFloat("salary") + " " +
-                                rs.getInt("age") + " " +
-                                rs.getString("phone_number") + " " +
-                                rs.getString("address")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            logger.error(e);
-        }
-    }
-
-    public static void getCompanyAvegrageSalary() {
+    public static float getCompanyAvegrageSalary() {
+        float averageSalaryCompany = 0f;
         try {
             ResultSet rs = stmt.executeQuery("SELECT avg(salary)AS average_salary FROM emp;");
-
-            System.out.println(rs.getInt("average_salary"));
+            averageSalaryCompany =rs.getFloat("average_salary");
         } catch (SQLException e) {
             e.printStackTrace();
             logger.error(e);
         }
+        return averageSalaryCompany;
     }
 
-    public static void getPositionAverageSalary() {
+    public static HashMap< String, String> getPositionAverageSalary() {
+        HashMap<String, String> mapAverageSal = new HashMap<>();
         try {
             ResultSet rs = stmt.executeQuery("SELECT position, avg(salary)AS average_salary FROM emp GROUP BY position;");
             while (rs.next()) {
+                mapAverageSal.put(rs.getString("position"),rs.getString("average_salary"));
                 System.out.println(rs.getString("position") + " " + rs.getInt("average_salary"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
             logger.error(e);
         }
+        return mapAverageSal;
     }
 
 }

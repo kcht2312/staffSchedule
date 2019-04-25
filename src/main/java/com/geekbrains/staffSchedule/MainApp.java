@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class MainApp {
@@ -74,7 +75,8 @@ public class MainApp {
                     logger.info("List работников очищен");
                     break;
                 case ("printAll"):
-                    EmployeeCRUD.printAll();
+                    arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
+                    System.out.println(arrayOfEmployee);
                     break;
                 case("addEmp"):
                     try {
@@ -84,7 +86,7 @@ public class MainApp {
                         EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
-                        logger.error(e);
+                        logger.info(e);
                     }
                     break;
                 case("expJson"):
@@ -92,12 +94,14 @@ public class MainApp {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
+                        arrayOfEmployee.clear();
+                        EmployeeCRUD.getAllEmployee();
                         WorkWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
-                        logger.error(e);
+                        logger.info(e);
                     }catch (IOException e) {
                         e.printStackTrace();
                         logger.error(e);
@@ -108,13 +112,15 @@ public class MainApp {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
+                        arrayOfEmployee.clear();
+                        EmployeeCRUD.getAllEmployee();
                         WorkWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
                         logger.error(e);
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
-                        logger.error(e);
+                        logger.info(e);
                     }
                     break;
                 case("impXml"):
@@ -122,27 +128,35 @@ public class MainApp {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
+                        arrayOfEmployee.clear();
                         arrayOfEmployee.addAll(WorkWithXml.importArrayOfEmployeeFromFile(values[1]));
                     } catch (IOException e) {
                         e.printStackTrace();
                         logger.error(e);
                     }catch (InvalidArgumentSetException e){
                         e.printStackTrace();
-                        logger.error(e);
+                        logger.info(e);
                     }
                     break;
                 case("getCompAverageSal"):
-                    EmployeeCRUD.getCompanyAvegrageSalary();
+                    float averageSalCompany = EmployeeCRUD.getCompanyAvegrageSalary();
+                    System.out.println("Средняя зарплата в компании сосавляет " + averageSalCompany);
                     break;
                 case("getPosAverageSal"):
-                    EmployeeCRUD.getPositionAverageSalary();
+                    HashMap<String,String> mapAvSal = new HashMap<>();
+                    mapAvSal.putAll(EmployeeCRUD.getPositionAverageSalary());
+                    System.out.println(mapAvSal);
                     break;
                 case("searchByPhone"):
                     try {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
-                        EmployeeCRUD.getNameByNumber(values[1]);
+                        arrayOfEmployee.clear();
+                        arrayOfEmployee.addAll(EmployeeCRUD.getNameByNumber(values[1]));
+                        for (Employee e: arrayOfEmployee) {
+                            System.out.println(e.getName() + e.getAddInform().getPhoneNumber());
+                        }
                     } catch (InvalidArgumentSetException e){
                         e.printStackTrace();
                     }
@@ -157,6 +171,5 @@ public class MainApp {
         }
 
     }
-
 }
 
