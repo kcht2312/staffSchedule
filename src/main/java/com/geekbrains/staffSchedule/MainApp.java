@@ -10,7 +10,6 @@ import com.geekbrains.staffSchedule.workWithDB.ConnectToDB;
 import com.geekbrains.staffSchedule.workWithDB.EmployeeCRUD;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,14 +62,15 @@ public class MainApp {
                             "        /exit - закрытие программы\n"
                     );
                     break;
-                case("loadFromDB"):
+                case ("loadFromDB"):
+                    arrayOfEmployee.clear();
                     arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
                     logger.info("Из бд загружен список работников");
                     break;
-                case("showAll"):
+                case ("showAll"):
                     System.out.println(arrayOfEmployee);
                     break;
-                case("clearList"):
+                case ("clearList"):
                     arrayOfEmployee.clear();
                     logger.info("List работников очищен");
                     break;
@@ -78,52 +78,48 @@ public class MainApp {
                     arrayOfEmployee.addAll(EmployeeCRUD.getAllEmployee());
                     System.out.println(arrayOfEmployee);
                     break;
-                case("addEmp"):
+                case ("addEmp"):
                     try {
                         if (values.length < 5 || values.length > 5) {
                             throw new InvalidArgumentSetException();
                         }
                         EmployeeCRUD.addEmployee(values[1], values[2], Integer.parseInt(values[3]), Float.parseFloat(values[4]));
-                    }catch (InvalidArgumentSetException e){
+                    } catch (InvalidArgumentSetException e) {
                         e.printStackTrace();
                         logger.info(e);
                     }
                     break;
-                case("expJson"):
+                case ("expJson"):
                     try {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
-                        arrayOfEmployee.clear();
-                        EmployeeCRUD.getAllEmployee();
-                        WorkWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
+                        WorkWithJson.exportArrayOfEmployeeToFile(arrayOfEmployee, values[1]);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
-                    }catch (InvalidArgumentSetException e){
+                    } catch (InvalidArgumentSetException e) {
                         e.printStackTrace();
                         logger.info(e);
-                    }catch (IOException e) {
-                        e.printStackTrace();
-                        logger.error(e);
-                    }
-                    break;
-                case("expXml"):
-                    try {
-                        if (values.length < 2 || values.length > 2) {
-                            throw new InvalidArgumentSetException();
-                        }
-                        arrayOfEmployee.clear();
-                        EmployeeCRUD.getAllEmployee();
-                        WorkWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee,values[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
                         logger.error(e);
-                    }catch (InvalidArgumentSetException e){
+                    }
+                    break;
+                case ("expXml"):
+                    try {
+                        if (values.length < 2 || values.length > 2) {
+                            throw new InvalidArgumentSetException();
+                        }
+                        WorkWithXml.exportArrayOfEmployeeToFile(arrayOfEmployee, values[1]);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        logger.error(e);
+                    } catch (InvalidArgumentSetException e) {
                         e.printStackTrace();
                         logger.info(e);
                     }
                     break;
-                case("impXml"):
+                case ("impXml"):
                     try {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
@@ -133,31 +129,31 @@ public class MainApp {
                     } catch (IOException e) {
                         e.printStackTrace();
                         logger.error(e);
-                    }catch (InvalidArgumentSetException e){
+                    } catch (InvalidArgumentSetException e) {
                         e.printStackTrace();
                         logger.info(e);
                     }
                     break;
-                case("getCompAverageSal"):
+                case ("getCompAverageSal"):
                     float averageSalCompany = EmployeeCRUD.getCompanyAvegrageSalary();
                     System.out.println("Средняя зарплата в компании сосавляет " + averageSalCompany);
                     break;
-                case("getPosAverageSal"):
-                    HashMap<String,String> mapAvSal = new HashMap<>();
+                case ("getPosAverageSal"):
+                    HashMap<String, String> mapAvSal = new HashMap<>();
                     mapAvSal.putAll(EmployeeCRUD.getPositionAverageSalary());
                     System.out.println(mapAvSal);
                     break;
-                case("searchByPhone"):
+                case ("searchByPhone"):
                     try {
                         if (values.length < 2 || values.length > 2) {
                             throw new InvalidArgumentSetException();
                         }
                         arrayOfEmployee.clear();
                         arrayOfEmployee.addAll(EmployeeCRUD.getNameByNumber(values[1]));
-                        for (Employee e: arrayOfEmployee) {
+                        for (Employee e : arrayOfEmployee) {
                             System.out.println(e.getName() + e.getAddInform().getPhoneNumber());
                         }
-                    } catch (InvalidArgumentSetException e){
+                    } catch (InvalidArgumentSetException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -169,7 +165,6 @@ public class MainApp {
                     System.out.println("Incorrect command");
             }
         }
-
     }
 }
 
